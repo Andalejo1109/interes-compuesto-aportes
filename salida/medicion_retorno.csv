@@ -1,0 +1,2 @@
+"metodo","fuente","fecha_inicio","fecha_fin","n_meses_retorno","riqueza_1usd","cagr_anual","cagr_buy_and_hold_no_usada","peso_SPYG","peso_SMH","peso_BRKB","peso_IEMG","peso_VTI","cagr_SPYG","cagr_SMH","cagr_BRKB","cagr_IEMG","cagr_VTI"
+"TWR mensual rebalanceada a pesos fijos; CAGR = riqueza^(12/n) - 1","Yahoo Finance adjusted close","2012-10-31","2026-09-30",167,9.54416263002075,0.17598104918429,0.214825441730184,0.31,0.22,0.2,0.2,0.07,0.170222859296477,0.316955940925443,0.134167325625172,0.0643165842588083,0.144772070159032
