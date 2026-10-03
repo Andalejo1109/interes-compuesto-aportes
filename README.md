@@ -1,32 +1,34 @@
 # Tiempo y aportes, no de la noche a la mañana
 
-Simulación educativa de interés compuesto para acompañar una tesis de inversionista de largo plazo. No es asesoría, no es una promesa y no es un resultado de mercado.
+Simulación educativa de interés compuesto para acompañar una tesis de inversionista de largo plazo. No es asesoría, no es una promesa y no es un resultado garantizado.
 
 > Para llegar a evidenciar ganancias se necesita tiempo y aportes a capital, no es que inicies con 200$ o 1000$ y lograrás 50000$ o 100000$ de la noche a la mañana; tienes que acompañar tu estrategia, continuar haciendo aportes a capital, darle tiempo y que el mercado esté a tu favor.
 
 Alejandro Rodríguez · [@Andalejo1109](https://github.com/Andalejo1109)
 
-## Qué muestra
+## Qué muestra el script base
 
-Con el escenario por defecto (editable arriba del script):
+Con el escenario por defecto de `interescompuesto.R` (editable arriba del script):
 
 - Capital inicial: **US$ 1.000**
 - Aporte: **US$ 200 al cierre de cada mes**
 - Horizonte: **15 años** (180 meses)
-- Tasas nominales anuales: **10%, 18% y 23%**, capitalizadas cada mes (`r = tasa / 12`)
+- Tasas nominales anuales de juguete: **10%, 18% y 23%**, capitalizadas cada mes (`r = tasa / 12`)
 - Contraste: el mismo inicial, al **18%**, **sin volver a aportar**
 
 La idea es ver, en un solo gráfico, que el camino lo hacen el tiempo y los aportes. La línea punteada se queda pequeña justo porque no se sigue alimentando el capital. Nada de esto ocurre de un mes para otro.
 
 ## Fórmula
 
-Anualidad ordinaria (el aporte entra al final del mes):
+Anualidad ordinaria (el aporte entra al final del mes). La misma regla sirve para el apéndice:
 
 ```
 r = tasa_anual / 12
 n = años × 12
 
 VF = P × (1 + r)^n  +  PMT × (((1 + r)^n − 1) / r)
+capital aportado = P + PMT × n
+ganancia = VF − capital aportado
 ```
 
 - `P` es el capital inicial
@@ -55,21 +57,18 @@ Hace falta R con `ggplot2`, `gganimate` y `magick`.
 ```bash
 cd interes-compuesto
 Rscript interescompuesto.R
+Rscript apendice_retorno_real.R
 ```
 
-Salida en `salida/`:
+El script base deja en `salida/`:
 
 - `trayectoria.png` — gráfico estático
 - `trayectoria.gif` — las cuatro sendas creciendo a lo largo de los años
 - `valores_finales.csv` — aportado, valor final y ganancia
 
-El apéndice (tres aportes desde cero, más el camino de Alejandro) es otro script. No modifica este escenario:
+El apéndice con el retorno medido del núcleo es `apendice_retorno_real.R`. No modifica el escenario de arriba. `apendice_tres_aportes.R` queda como la versión anterior, con una tasa de juguete del 15% y con la persona de US$ 2.000 al mes, que este apéndice ya no usa.
 
-```bash
-Rscript apendice_tres_aportes.R
-```
-
-## Cómo cambiar el escenario
+## Cómo cambiar el escenario base
 
 Abre `interescompuesto.R` y edita solo el bloque `CONFIG` de arriba:
 
@@ -83,99 +82,119 @@ tasa_contraste <- 0.18
 
 Vuelve a correr `Rscript interescompuesto.R`. El CSV y las figuras se reemplazan.
 
-## Apéndice. Tres aportes, y el camino propio
+## Apéndice. El retorno que sí dio el núcleo
 
-El script de arriba no se toca. Este escenario vive en `apendice_tres_aportes.R`.
+La tasa de este apéndice **no es 15% ni ninguna cifra inventada**. Es la rentabilidad anualizada del núcleo long-only de la tesis, medida con precios públicos y aplicada constante hacia adelante.
 
-Aquí la tasa ya no es la pregunta. Es la misma para los cuatro: un **15% anual de juguete**, capitalizado cada mes. En los tres primeros lo que cambia es **cuánto tiempo le queda a cada quien** y, por eso, cuánto tiene que ir soltando todos los meses. La cuarta senda es Alejandro: no es una edad de pensión, es el camino de Popular Investor de largo plazo, con capital ya puesto y un aporte mensual.
+Tres personas. Se quitó quien aportaba US$ 2.000 al mes.
 
-> Si a uno le faltan unos cuatro años para la pensión, el aporte tiene que ser grande: en este ejemplo, US$ 4.000 al mes. Si el horizonte está entre 10 y 15 años, US$ 2.000 ya cuentan otra historia. Y si uno puede esperar 15 años o más, con US$ 500 mensuales el tiempo hace buena parte del trabajo. Alejandro parte hoy con US$ 70.000 y sigue con US$ 1.500 al mes: el inicial ya hace parte del camino, y el tiempo sigue siendo el que lo deja crecer. No es un plan de pensión ni una promesa de rentabilidad.
+| Quién | Punto de partida | Nota de horizonte |
+| --- | --- | --- |
+| A | US$ 0 y **US$ 4.000** al cierre de cada mes | Unos 4 años para la pensión |
+| B | US$ 0 y **US$ 500** al cierre de cada mes | Puede esperar 15 años o más |
+| Alejandro | **US$ 70.000** hoy y **US$ 1.500** al mes | Popular Investor de largo plazo |
 
-- Los tres primeros: capital inicial **US$ 0** y aporte al cierre de cada mes de **US$ 500**, **US$ 2.000** y **US$ 4.000**
-- Alejandro: capital inicial **US$ 70.000** hoy y aporte de **US$ 1.500** al cierre de cada mes. Horizonte: **Popular Investor de largo plazo** (sin una edad de pensión)
-- Tasa nominal: **15% anual**, con `r = 0,15 / 12`
-- Se mira el camino a **15 años**, con foto en los años **4, 5, 10 y 15**
-- La raya del **año 4** sigue siendo la marca de quien aporta US$ 4.000, no de Alejandro
+Se mira el camino a **15 años**, con foto en los años **5, 10 y 15**. La raya del año 4 en el gráfico sigue siendo la marca de quien aporta US$ 4.000. No entra en la tabla.
 
-Fórmula, con el inicial en su sitio (en los tres primeros, `P = 0`):
+### Qué se midió
+
+Pesos fijos, long-only, sin apalancamiento. Suman 100%:
+
+| Activo | Peso | CAGR del activo en la misma ventana |
+| --- | ---: | ---: |
+| SPYG | 31% | 17,02% |
+| SMH | 22% | 31,70% |
+| BRK.B | 20% | 13,42% |
+| IEMG | 20% | 6,43% |
+| VTI | 7% | 14,48% |
+
+Fuente: cierre ajustado mensual de Yahoo Finance (el precio ajustado incorpora dividendos). Cada punto es el último día hábil del mes en el que los cinco tenían precio.
+
+**Ventana usada: 31 oct 2012 → 30 sep 2026.** Son 168 cierres y **167 meses de retorno** (13,92 años). El primer retorno es el de noviembre de 2012. El último es el de septiembre de 2026. Octubre de 2026 no entra: el mes todavía no había cerrado cuando se armó la serie.
+
+No hay 20 años comunes. IEMG (iShares Core MSCI Emerging Markets) se listó el **18 oct 2012**; en esta descarga el primer día con precio es el 24 oct 2012, y el primer cierre de mes común es el **31 oct 2012**. SPYG, SMH, BRK.B y VTI sí tienen historia más larga. El portafolio no puede empezar antes de que exista el último ETF, así que la ventana es la historia común, no un recorte arbitrario de 20 años.
+
+Método de la tasa: **rebalanceo mensual** a esos pesos. Cada mes
 
 ```
-r = 0,15 / 12
-VF = P × (1 + r)^n  +  PMT × (((1 + r)^n − 1) / r)
-capital aportado = P + PMT × n
-ganancia = VF − capital aportado
+r_p = 0,31·r_SPYG + 0,22·r_SMH + 0,20·r_BRK.B + 0,20·r_IEMG + 0,07·r_VTI
+riqueza = producto(1 + r_p)
+CAGR = riqueza ^ (12 / 167) − 1
 ```
 
-Cifras que imprime el script (USD, al centavo). Las tres de arriba no se movieron:
+Un dólar en ese núcleo, rebalanceado cada mes, termina en **US$ 9,5442**. La CAGR es **17,5981% anual** (`0,17598104918429`).
+
+Eso es una rentabilidad ponderada por tiempo (TWR) del portafolio de pesos constantes. No es la rentabilidad que habría tenido cada persona si sus aportes hubieran entrado mes a mes durante esos años.
+
+Si nadie rebalancea y los pesos se van con el mercado, la riqueza sube a unos US$ 15,00 y la CAGR a **21,48%**, sobre todo porque SMH se come el portafolio. Ese número **no se usa**: ya no es el núcleo 31/22/20/20/7 de la tesis. La proyección usa el 17,5981% rebalanceado.
+
+### Cómo se proyecta
+
+No se vuelve a pasar la senda histórica de meses buenos y malos. Se toma **esa CAGR como tasa anual constante** y se capitaliza cada mes con la misma convención del script base:
+
+```
+r = 0,17598104918429 / 12 = 0,014665087432024
+```
+
+Ojo: `r` es la tasa anual dividida entre 12, no la tasa mensual equivalente `(1 + CAGR)^(1/12) − 1`. Por eso `(1 + r)^12` no es exactamente `1 + CAGR`. Es la misma regla con la que se armaron los escenarios de 10%, 18% y 23%.
+
+### Cortes
+
+Cifras que imprime `apendice_retorno_real.R` (USD, al centavo):
 
 | Quién | Horizonte que ilustra | Año | Capital aportado | Valor | Ganancia |
 | --- | --- | ---: | ---: | ---: | ---: |
-| US$ 4.000 / mes | Unos 4 años para la pensión | 4 | 192.000,00 | 260.913,55 | 68.913,55 |
-| US$ 4.000 / mes | Unos 4 años para la pensión | 5 | 240.000,00 | 354.298,03 | 114.298,03 |
-| US$ 4.000 / mes | Unos 4 años para la pensión | 10 | 480.000,00 | 1.100.868,23 | 620.868,23 |
-| US$ 4.000 / mes | Unos 4 años para la pensión | 15 | 720.000,00 | 2.674.027,04 | 1.954.027,04 |
-| US$ 2.000 / mes | Horizonte de 10 a 15 años | 4 | 96.000,00 | 130.456,78 | 34.456,78 |
-| US$ 2.000 / mes | Horizonte de 10 a 15 años | 5 | 120.000,00 | 177.149,02 | 57.149,02 |
-| US$ 2.000 / mes | Horizonte de 10 a 15 años | 10 | 240.000,00 | 550.434,12 | 310.434,12 |
-| US$ 2.000 / mes | Horizonte de 10 a 15 años | 15 | 360.000,00 | 1.337.013,52 | 977.013,52 |
-| US$ 500 / mes | Puede esperar 15 años o más | 4 | 24.000,00 | 32.614,19 | 8.614,19 |
-| US$ 500 / mes | Puede esperar 15 años o más | 5 | 30.000,00 | 44.287,25 | 14.287,25 |
-| US$ 500 / mes | Puede esperar 15 años o más | 10 | 60.000,00 | 137.608,53 | 77.608,53 |
-| US$ 500 / mes | Puede esperar 15 años o más | 15 | 90.000,00 | 334.253,38 | 244.253,38 |
-| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 4 | 142.000,00 | 224.917,42 | 82.917,42 |
-| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 5 | 160.000,00 | 280.364,46 | 120.364,46 |
-| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 10 | 250.000,00 | 723.640,51 | 473.640,51 |
-| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 15 | 340.000,00 | 1.657.703,55 | 1.317.703,55 |
+| US$ 4.000 / mes | Unos 4 años para la pensión | 5 | 240.000,00 | 380.582,05 | 140.582,05 |
+| US$ 4.000 / mes | Unos 4 años para la pensión | 10 | 480.000,00 | 1.292.196,82 | 812.196,82 |
+| US$ 4.000 / mes | Unos 4 años para la pensión | 15 | 720.000,00 | 3.475.803,42 | 2.755.803,42 |
+| US$ 500 / mes | Puede esperar 15 años o más | 5 | 30.000,00 | 47.572,76 | 17.572,76 |
+| US$ 500 / mes | Puede esperar 15 años o más | 10 | 60.000,00 | 161.524,60 | 101.524,60 |
+| US$ 500 / mes | Puede esperar 15 años o más | 15 | 90.000,00 | 434.475,43 | 344.475,43 |
+| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 5 | 160.000,00 | 310.390,48 | 150.390,48 |
+| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 10 | 250.000,00 | 886.201,95 | 636.201,95 |
+| Alejandro · US$ 70.000 + US$ 1.500/mes | Popular Investor de largo plazo | 15 | 340.000,00 | 2.265.453,10 | 1.925.453,10 |
 
-Como los tres primeros parten de cero, su saldo es proporcional al aporte. Antes de redondear, el de US$ 2.000 es **exactamente cuatro veces** el de US$ 500, y el de US$ 4.000 es **ocho veces**. Alejandro **no** entra en esa proporción: arranca con US$ 70.000, así que a los 15 años (US$ 1.657.703,55) queda por encima de quien aporta US$ 2.000 desde cero (US$ 1.337.013,52) y por debajo de quien aporta US$ 4.000 (US$ 2.674.027,04). El capital aportado de Alejandro incluye los US$ 70.000 iniciales.
+Quienes parten de cero siguen siendo proporcionales al aporte: antes de redondear, el de US$ 4.000 es ocho veces el de US$ 500. Alejandro no entra en esa proporción porque arranca con US$ 70.000. A los 15 años queda entre los dos. El capital aportado de Alejandro incluye esos US$ 70.000.
 
-### Celdas revisadas a mano
+### Celda revisada a mano
 
-`r = 0,15 / 12 = 0,0125`.
-
-**Año 5, aporte US$ 500** (`n = 60`, `P = 0`):
+Alejandro, año 5. `P = 70.000`, `PMT = 1.500`, `n = 60`.
 
 ```
-(1,0125)^60 = 2,107181346951
-VF = 500 × (2,107181346951 − 1) / 0,0125 = 44.287,253878
+r = 0,17598104918429 / 12 = 0,014665087432024
+(1 + r)^60 = 2,395317273501
+
+70.000 × 2,395317273501 = 167.672,209145
+1.500 × (2,395317273501 − 1) / 0,014665087432024 = 142.718,270174
+VF = 167.672,209145 + 142.718,270174 = 310.390,479319
 ```
 
-Al centavo: **US$ 44.287,25**. Capital aportado: 500 × 60 = **US$ 30.000,00**. Ganancia: **US$ 14.287,25**. Es la fila del CSV.
+Al centavo: **US$ 310.390,48**. Capital aportado: 70.000 + 1.500 × 60 = **US$ 160.000,00**. Ganancia: **US$ 150.390,48**. Es la fila del CSV.
 
-**Año 4, aporte US$ 4.000** (`n = 48`, `P = 0`), la marca de pensión:
+La misma cuenta, con `P = 0` y `PMT = 500`, da **US$ 47.572,76** en el año 5. También cuadra con el CSV.
 
-```
-(1,0125)^48 = 1,815354853053
-VF = 4.000 × (1,815354853053 − 1) / 0,0125 = 260.913,552977
-```
+El recorrido mes a mes y la fórmula cerrada se separan, como máximo, por cerca de **1,5 × 10⁻⁸ USD**. Es ruido de punto flotante, no otra cuenta.
 
-Al centavo: **US$ 260.913,55**. Capital aportado: 4.000 × 48 = **US$ 192.000,00**. Ganancia: **US$ 68.913,55**. También cuadra con el CSV.
-
-**Año 5, Alejandro** (`P = 70.000`, `PMT = 1.500`, `n = 60`):
-
-```
-(1,0125)^60 = 2,107181346951241
-70.000 × 2,107181346951241 = 147.502,694287
-1.500 × (2,107181346951241 − 1) / 0,0125 = 132.861,761634
-VF = 147.502,694287 + 132.861,761634 = 280.364,455921
-```
-
-Al centavo: **US$ 280.364,46**. Capital aportado: 70.000 + 1.500 × 60 = **US$ 160.000,00**. Ganancia: **US$ 120.364,46**. Es la fila del CSV.
-
-El recorrido mes a mes (`saldo × (1 + r) + aporte`) y esa fórmula cerrada se separan, como máximo, por cerca de **1 × 10⁻⁸ USD**. Es ruido de punto flotante, no otra cuenta.
+La riqueza del portafolio (9,5441626300) y la CAGR se recalculan dentro del script a partir de `datos/precios_ajustados_mes.csv`. La tasa no está escrita a mano en `CONFIG`.
 
 ```bash
-Rscript apendice_tres_aportes.R
+Rscript apendice_retorno_real.R
 ```
 
 Queda en `salida/`:
 
-- `apendice_tres_aportes.png` — las cuatro sendas, con la raya del año 4 y cortes en 5, 10 y 15
-- `apendice_tres_aportes.gif` — el mismo camino, creciendo mes a mes
-- `apendice_cortes.csv` — aportado (inicial incluido), valor y ganancia en cada corte
+- `apendice_retorno_real.png` — las tres sendas, con la raya del año 4 y cortes en 5, 10 y 15
+- `apendice_retorno_real.gif` — el mismo camino, creciendo mes a mes
+- `apendice_retorno_real_cortes.csv` — aportado, valor y ganancia en cada corte
+- `medicion_retorno.csv` — ventana, riqueza, CAGR usada y CAGR buy-and-hold que no se usa
+- `retorno_portafolio_mensual.csv` — el retorno mensual del núcleo rebalanceado
 
-El PNG y el GIF se generan al correr el script. La API de GitHub no acepta esos binarios por aquí, así que en el repo queda el CSV.
+Los precios de origen están en `datos/precios_ajustados_mes.csv`. El PNG y el GIF se generan al correr el script. La API de GitHub no acepta esos binarios por aquí, así que en el repo quedan los CSV.
 
 ## Aviso
 
-Esto, incluido el apéndice, es material **educativo** para conversar sobre horizonte y disciplina de aportes, en el proceso de inversionista y de Popular Investor de largo plazo. Los US$ 70.000 y los US$ 1.500 al mes son el punto de partida del ejemplo de Alejandro, no una foto de su rentabilidad. No es un plan de retiro, no es una recomendación de compra o venta y no garantiza una rentabilidad. Una tasa constante, sea 10%, 15%, 18% o 23%, solo sirve para ilustrar la tesis.
+Esto es material **educativo** para conversar sobre horizonte y disciplina de aportes, en el proceso de inversionista y de Popular Investor de largo plazo.
+
+El **17,5981%** es lo que rindió, en el pasado y en esa ventana, un portafolio rebalanceado cada mes a los pesos de la tesis. **No es una promesa de que el núcleo vuelva a dar eso**, ni los próximos 5, 10 o 15 años, ni todos los meses. Hubo años negativos en la muestra (2015, 2018, 2022). Un plan de aportes con esa tasa constante es una ilustración, no el camino que va a recorrer el mercado.
+
+Tampoco es un plan de pensión, ni una recomendación de compra o venta, ni una foto del portafolio real de Alejandro en eToro. Los US$ 70.000 y los US$ 1.500 al mes son el punto de partida del ejemplo. Quien está a unos cuatro años de la pensión no debería leer la fila de US$ 4.000 como una meta ni como un cálculo de retiro.
