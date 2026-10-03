@@ -1,0 +1,5 @@
+"escenario","tasa_anual","con_aportes","capital_aportado_usd","valor_final_usd","ganancia_usd","ganancia_sobre_aportado"
+"10% con aportes",0.1,TRUE,37000,87347.99,50347.99,1.360756
+"18% con aportes",0.18,TRUE,37000,195709.27,158709.27,4.28944
+"23% con aportes",0.23,TRUE,37000,338196.13,301196.13,8.140436
+"18% solo el inicial",0.18,FALSE,1000,14584.37,13584.37,13.584368
