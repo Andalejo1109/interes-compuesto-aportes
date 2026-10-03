@@ -91,11 +91,11 @@ Tres personas. Se quitó quien aportaba US$ 2.000 al mes.
 
 | Quién | Punto de partida | Nota de horizonte |
 | --- | --- | --- |
-| A | US$ 0 y **US$ 4.000** al cierre de cada mes | Unos 4 años para la pensión |
+| A | US$ 0 y **US$ 4.000** al cierre de cada mes | Objetivo de pensión en el año 5 |
 | B | US$ 0 y **US$ 500** al cierre de cada mes | Puede esperar 15 años o más |
 | Alejandro | **US$ 70.000** hoy y **US$ 1.500** al mes | Popular Investor de largo plazo |
 
-Se mira el camino a **15 años**, con foto en los años **5, 10 y 15**. La raya del año 4 en el gráfico sigue siendo la marca de quien aporta US$ 4.000. No entra en la tabla.
+Se mira el camino a **15 años**, con foto en los años **5, 10 y 15**. En el gráfico de la tasa constante (`apendice_retorno_real.R`) la raya sigue en el año 4, como se generó esa figura. En el replay mensual el objetivo de pensión es el **año 5** (mes 60), y esa raya es la misma para las tres personas.
 
 ### Qué se midió
 
@@ -262,6 +262,24 @@ Las dos que parten de cero tienen el mismo drawdown en porcentaje porque sus sal
 
 En marzo 2020, el peor mes suelto (−12,2196%), los saldos quedaron en US$ 488.123,20, US$ 61.015,40 y US$ 342.370,77. El drawdown de la cuenta ahí fue −16,64% para las dos que parten de cero y −17,51% para Alejandro. No es su peor valle: el de 2022 es más hondo.
 
+### Tres gráficos, uno por persona
+
+El objetivo de pensión está en el **año 5** (mes 60), no en el año 4. La raya vertical dice «pensión» y se dibuja en las tres sendas, no solo en quien aporta US$ 4.000. No cambia el aporte ni el retorno: es una marca de horizonte.
+
+Cada gráfico cubre los **15 años** completos, mes a mes:
+
+- el **área** es el capital aportado (lo que se fue metiendo)
+- la **línea** es el valor del portafolio, así que las caídas se siguen viendo
+- la **raya** del año 5 es la pensión
+
+| Quién | PNG | GIF |
+| --- | --- | --- |
+| US$ 4.000 / mes | `salida/grafico_4000.png` | `salida/grafico_4000.gif` |
+| US$ 500 / mes | `salida/grafico_500.png` | `salida/grafico_500.gif` |
+| Alejandro | `salida/grafico_alejandro.png` | `salida/grafico_alejandro.gif` |
+
+En el año 5 el replay da, al centavo: US$ 4.000/mes **361.060,33** (aportados 240.000); US$ 500/mes **45.132,54** (aportados 30.000); Alejandro **287.763,31** (aportados 160.000, que incluyen los 70.000 iniciales). Es el mismo corte de la tabla de arriba.
+
 ```bash
 Rscript apendice_replay_mensual.R
 ```
@@ -270,9 +288,11 @@ Queda en `salida/`:
 
 - `apendice_replay_mensual.csv` — cierre de cada mes, las tres personas, senda de 15 años y senda que se corta en la muestra
 - `apendice_replay_cortes.csv` — años 5, 10 y 15, fin de la muestra, valle del núcleo y peor mes
-- `apendice_replay_mensual.png` y `.gif` — el camino de 15 años, con el hueco de 2022 visible
+- `apendice_replay_mensual.png` y `.gif` — las tres sendas juntas, con la raya de pensión en el año 5 y el hueco de 2022 visible
+- `grafico_4000.png`, `grafico_500.png`, `grafico_alejandro.png` — un gráfico por persona: área de aportes y línea del valor
+- `grafico_4000.gif`, `grafico_500.gif`, `grafico_alejandro.gif` — el mismo camino, creciendo mes a mes
 
-El PNG y el GIF se generan al correr el script. En el repo van el script, este README y los CSV.
+Los PNG y los GIF se generan al correr el script. En el repo van el script y este README. Los binarios no se suben por la API.
 
 ## Aviso
 
@@ -280,4 +300,4 @@ Esto es material **educativo** para conversar sobre horizonte y disciplina de ap
 
 El **17,5981%** es lo que rindió, en el pasado y en esa ventana, un portafolio rebalanceado cada mes a los pesos de la tesis. **No es una promesa de que el núcleo vuelva a dar eso**, ni los próximos 5, 10 o 15 años, ni todos los meses. Hubo años negativos en la muestra (2015, 2018, 2022). Un plan de aportes con esa tasa constante es una ilustración, no el camino que va a recorrer el mercado. El replay mensual de arriba tampoco lo es: vuelve a pasar meses que ya ocurrieron, incluido un tramo repetido al final para completar 15 años. **No dice lo que va a pasar los próximos 15.**
 
-Tampoco es un plan de pensión, ni una recomendación de compra o venta, ni una foto del portafolio real de Alejandro en eToro. Los US$ 70.000 y los US$ 1.500 al mes son el punto de partida del ejemplo. Quien está a unos cuatro años de la pensión no debería leer la fila de US$ 4.000 como una meta ni como un cálculo de retiro.
+Tampoco es un plan de pensión, ni una recomendación de compra o venta, ni una foto del portafolio real de Alejandro en eToro. Los US$ 70.000 y los US$ 1.500 al mes son el punto de partida del ejemplo. La raya del año 5 marca un horizonte para conversar, no una fecha de retiro ni una meta. La fila de US$ 4.000 no es un cálculo de pensión.
