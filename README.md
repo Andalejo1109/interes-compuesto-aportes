@@ -58,6 +58,7 @@ Hace falta R con `ggplot2`, `gganimate` y `magick`.
 cd interes-compuesto
 Rscript interescompuesto.R
 Rscript apendice_retorno_real.R
+Rscript apendice_replay_mensual.R
 ```
 
 El script base deja en `salida/`:
@@ -84,7 +85,7 @@ Vuelve a correr `Rscript interescompuesto.R`. El CSV y las figuras se reemplazan
 
 ## Apéndice. El retorno que sí dio el núcleo
 
-La tasa de este apéndice **no es 15% ni ninguna cifra inventada**. Es la rentabilidad anualizada del núcleo long-only de la tesis, medida con precios públicos y aplicada constante hacia adelante.
+La tasa de este apéndice **no es 15% ni ninguna cifra inventada**. Es la rentabilidad anualizada del núcleo long-only de la tesis, medida con precios públicos y aplicada constante hacia adelante. Es una curva lisa. El replay con las caídas de verdad está en la sección siguiente, `apendice_replay_mensual.R`.
 
 Tres personas. Se quitó quien aportaba US$ 2.000 al mes.
 
@@ -191,10 +192,92 @@ Queda en `salida/`:
 
 Los precios de origen están en `datos/precios_ajustados_mes.csv`. El PNG y el GIF se generan al correr el script. La API de GitHub no acepta esos binarios por aquí, así que en el repo quedan los CSV.
 
+## Apéndice. Replay mensual, con las caídas
+
+Esto **rejuega meses pasados**. No es un pronóstico, no es una tasa lisa y no promete que el camino se repita.
+
+Las tres personas son las mismas. Ya no está quien aportaba US$ 2.000 al mes. Cada mes se aplica el retorno histórico del núcleo, en el orden en que ocurrió, recalculado desde `datos/precios_ajustados_mes.csv` (los mismos 167 meses: 30 nov 2012 → 30 sep 2026). No se inventan precios. La CAGR del 17,5981% queda solo como referencia: **no entra en la cuenta**.
+
+Convención de caja, la misma de los otros scripts: el saldo del cierre anterior gana el retorno de ese mes y **después** entra el aporte. El aporte no gana el mes en que se hace.
+
+```
+valor_m = valor_(m−1) × (1 + r_m) + PMT
+```
+
+Quince años son 180 meses y la muestra tiene 167. Del mes 168 al 180 el camino **repite el ciclo desde el inicio**: otra vez los retornos de noviembre 2012 a noviembre 2013. El cierre del año 15 aplica el retorno del 29 nov 2013. 2020 y 2022 salen **una sola vez**, dentro de la historia real, no en el tramo repetido. La senda que se detiene en la muestra (mes 167, 13,92 años, cierre 30 sep 2026) es idéntica a esos mismos meses del camino de 15 años. El script lo comprueba.
+
+### Caída del núcleo, sin aportes
+
+Un dólar rebalanceado cada mes a los pesos de la tesis. El drawdown es el valor contra el pico anterior.
+
+| | |
+| --- | --- |
+| Pico | 31 dic 2021, índice 4,496017 |
+| Valle | 30 sep 2022, índice 3,252161 |
+| Max drawdown | **−27,6657%** |
+| Recuperación de ese pico | 29 dic 2023 |
+| Peor mes suelto | 31 mar 2020, **−12,2196%** |
+
+En el replay del inversor ese valle es el **mes 119** (9,92 años). El retorno del núcleo en ese mes fue **−10,0015%**. Marzo de 2020 es el mes 89 (7,42 años).
+
+### Cortes del camino de 15 años
+
+USD al centavo. El año 10 cae en octubre 2022, un mes después del valle: el núcleo todavía estaba **−24,58%** bajo el pico de diciembre 2021. Por eso ese corte queda muy por debajo de la curva lisa del apéndice anterior. No es otro cálculo: es la caída, puesta en la fecha que le toca.
+
+| Quién | Año | Fecha del retorno aplicado | Capital aportado | Valor | Ganancia |
+| --- | ---: | --- | ---: | ---: | ---: |
+| US$ 4.000 / mes | 5 | 31 oct 2017 | 240.000,00 | 361.060,33 | 121.060,33 |
+| US$ 4.000 / mes | 10 | 31 oct 2022 | 480.000,00 | 844.541,44 | 364.541,44 |
+| US$ 4.000 / mes | 15 | 29 nov 2013 (ciclo repetido) | 720.000,00 | 3.493.489,12 | 2.773.489,12 |
+| US$ 500 / mes | 5 | 31 oct 2017 | 30.000,00 | 45.132,54 | 15.132,54 |
+| US$ 500 / mes | 10 | 31 oct 2022 | 60.000,00 | 105.567,68 | 45.567,68 |
+| US$ 500 / mes | 15 | 29 nov 2013 (ciclo repetido) | 90.000,00 | 436.686,14 | 346.686,14 |
+| Alejandro | 5 | 31 oct 2017 | 160.000,00 | 287.763,31 | 127.763,31 |
+| Alejandro | 10 | 31 oct 2022 | 250.000,00 | 554.058,75 | 304.058,75 |
+| Alejandro | 15 | 29 nov 2013 (ciclo repetido) | 340.000,00 | 2.160.601,89 | 1.820.601,89 |
+
+Quienes parten de cero siguen en proporción 8 a 1. Alejandro no, porque arranca con US$ 70.000 y ese capital sí comió las caídas.
+
+### Si se corta donde termina la historia
+
+Mes 167, sin repetir el ciclo. Cierre 30 sep 2026. Retorno de ese mes: +2,2343%.
+
+| Quién | Capital aportado | Valor | Ganancia |
+| --- | ---: | ---: | ---: |
+| US$ 4.000 / mes | 668.000,00 | 2.698.753,19 | 2.030.753,19 |
+| US$ 500 / mes | 83.500,00 | 337.344,15 | 253.844,15 |
+| Alejandro | 320.500,00 | 1.680.123,83 | 1.359.623,83 |
+
+### El peor mes de cada cuenta
+
+El peor drawdown de las tres cuentas cae en el mismo valle del núcleo, 30 sep 2022. Desde el pico de cada saldo (31 dic 2021) hasta ese valle:
+
+| Quién | Valor en el pico | Valor en el valle | Caída en USD | Drawdown de la cuenta | Retorno del núcleo ese mes |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| US$ 4.000 / mes | 1.072.189,13 | 806.175,37 | −266.013,76 | −24,81% | −10,0015% |
+| US$ 500 / mes | 134.023,64 | 100.771,92 | −33.251,72 | −24,81% | −10,0015% |
+| Alejandro | 716.792,09 | 529.967,04 | −186.825,05 | −26,06% | −10,0015% |
+
+Las dos que parten de cero tienen el mismo drawdown en porcentaje porque sus saldos son proporcionales. Alejandro cae un poco más: el capital inicial pesa más que los aportes nuevos, que amortiguan la caída. Aun así la cuenta cae menos que el núcleo (−27,67%), porque en esos nueve meses se siguió aportando.
+
+En marzo 2020, el peor mes suelto (−12,2196%), los saldos quedaron en US$ 488.123,20, US$ 61.015,40 y US$ 342.370,77. El drawdown de la cuenta ahí fue −16,64% para las dos que parten de cero y −17,51% para Alejandro. No es su peor valle: el de 2022 es más hondo.
+
+```bash
+Rscript apendice_replay_mensual.R
+```
+
+Queda en `salida/`:
+
+- `apendice_replay_mensual.csv` — cierre de cada mes, las tres personas, senda de 15 años y senda que se corta en la muestra
+- `apendice_replay_cortes.csv` — años 5, 10 y 15, fin de la muestra, valle del núcleo y peor mes
+- `apendice_replay_mensual.png` y `.gif` — el camino de 15 años, con el hueco de 2022 visible
+
+El PNG y el GIF se generan al correr el script. En el repo van el script, este README y los CSV.
+
 ## Aviso
 
 Esto es material **educativo** para conversar sobre horizonte y disciplina de aportes, en el proceso de inversionista y de Popular Investor de largo plazo.
 
-El **17,5981%** es lo que rindió, en el pasado y en esa ventana, un portafolio rebalanceado cada mes a los pesos de la tesis. **No es una promesa de que el núcleo vuelva a dar eso**, ni los próximos 5, 10 o 15 años, ni todos los meses. Hubo años negativos en la muestra (2015, 2018, 2022). Un plan de aportes con esa tasa constante es una ilustración, no el camino que va a recorrer el mercado.
+El **17,5981%** es lo que rindió, en el pasado y en esa ventana, un portafolio rebalanceado cada mes a los pesos de la tesis. **No es una promesa de que el núcleo vuelva a dar eso**, ni los próximos 5, 10 o 15 años, ni todos los meses. Hubo años negativos en la muestra (2015, 2018, 2022). Un plan de aportes con esa tasa constante es una ilustración, no el camino que va a recorrer el mercado. El replay mensual de arriba tampoco lo es: vuelve a pasar meses que ya ocurrieron, incluido un tramo repetido al final para completar 15 años. **No dice lo que va a pasar los próximos 15.**
 
 Tampoco es un plan de pensión, ni una recomendación de compra o venta, ni una foto del portafolio real de Alejandro en eToro. Los US$ 70.000 y los US$ 1.500 al mes son el punto de partida del ejemplo. Quien está a unos cuatro años de la pensión no debería leer la fila de US$ 4.000 como una meta ni como un cálculo de retiro.
