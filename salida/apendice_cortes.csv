@@ -1,0 +1,13 @@
+"escenario","aporte_mensual_usd","horizonte","anio","meses","tasa_anual","capital_inicial_usd","capital_aportado_usd","valor_usd","ganancia_usd"
+"US$ 4.000 / mes",4000,"Unos 4 años para la pensión",4,48,0.15,0,192000,260913.55,68913.55
+"US$ 4.000 / mes",4000,"Unos 4 años para la pensión",5,60,0.15,0,240000,354298.03,114298.03
+"US$ 4.000 / mes",4000,"Unos 4 años para la pensión",10,120,0.15,0,480000,1100868.23,620868.23
+"US$ 4.000 / mes",4000,"Unos 4 años para la pensión",15,180,0.15,0,720000,2674027.04,1954027.04
+"US$ 2.000 / mes",2000,"Horizonte de 10 a 15 años",4,48,0.15,0,96000,130456.78,34456.78
+"US$ 2.000 / mes",2000,"Horizonte de 10 a 15 años",5,60,0.15,0,120000,177149.02,57149.02
+"US$ 2.000 / mes",2000,"Horizonte de 10 a 15 años",10,120,0.15,0,240000,550434.12,310434.12
+"US$ 2.000 / mes",2000,"Horizonte de 10 a 15 años",15,180,0.15,0,360000,1337013.52,977013.52
+"US$ 500 / mes",500,"Puede esperar 15 años o más",4,48,0.15,0,24000,32614.19,8614.19
+"US$ 500 / mes",500,"Puede esperar 15 años o más",5,60,0.15,0,30000,44287.25,14287.25
+"US$ 500 / mes",500,"Puede esperar 15 años o más",10,120,0.15,0,60000,137608.53,77608.53
+"US$ 500 / mes",500,"Puede esperar 15 años o más",15,180,0.15,0,90000,334253.38,244253.38
